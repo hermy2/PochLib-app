@@ -140,23 +140,26 @@ templateImg.classList = "thumbnail";
 templateImg.src="resources/css/img/unavailable.png"; //resources/css/img/unavailable.png
 liElt.appendChild(templateImg);
 
+//****ICONS****//
 const anchorBookmark = document.createElement('a');
 anchorBookmark.classList="icon-bookmark";
 anchorBookmark.href="#";
 templateTitle.before(anchorBookmark);
-//template.appendChild(anchorBookmark);
 
 const iconBookmark = document.createElement('i');
 iconBookmark.classList ="fas fa-bookmark";
 iconBookmark.ariaHidden="true";
 anchorBookmark.appendChild(iconBookmark);
 
-//****ICON EVENT LISTENER****//
-//template.appendChild(anchorBookmark);
+//const anchorTrash = document.createElement('a');
+//anchorTrash.classList = "icon-trash";
+//anchorTrash.href = "#";
+//pochList.appendChild(anchorTrash)
 
-//const doc = documentFragment.querySelector('.bookList-list');
-//const a = doc.querySelector('.icon-bookmark');
-
+//const iconTrash = document.createElement('i');
+//iconTrash.classList = "fas fa-trash-alt";
+//iconTrash.ariaHidden = "true";
+//anchorTrash.append(iconTrash);
 
 
 //****LIST OUTPUT****//
@@ -251,24 +254,24 @@ const listElement = document.querySelector('.list-books'); //<!--results-->
                 } else {
                     reject(new Error('Something went wrong!'));
                 }
-        };
+            };
             
-        xhr.onerror = function() {
-            reject(new Error('Failed to send request!'));
-             
-        }
+            xhr.onerror = function() {
+                reject(new Error('Failed to send request!'));
 
-        xhr.send(JSON.stringify(data));
-            
+            };
+
+            xhr.send(JSON.stringify(data));
+
         });      
-       return promise; 
-  }
+        return promise; 
+    }
     
     async function fetchBooks() {
         
-    const title = document.getElementById('titre-livre').value;
-    const author = document.getElementById('auteur').value;
-    const search = [title, author].join(' ');  //or let search =`${title} + ${author}`; 
+        const title = document.getElementById('titre-livre').value;
+        const author = document.getElementById('auteur').value;
+        const search = [title, author].join(' ');  //or let search =`${title} + ${author}`; 
         
         //check if both title / author are entered
 //        if (title.trim() === '' ) {
@@ -278,18 +281,16 @@ const listElement = document.querySelector('.list-books'); //<!--results-->
 //            alert('please enter Author');
 //            return;
 //        }
-            
-        
-        
+                        
         sectionBookSearch.classList.toggle('visible');
         
-//        try {
-          const responseData = await sendHttpRequest(
-            'GET', 
-            "https://www.googleapis.com/books/v1/volumes?q=" + search );
-        
-        const listOfBooks = responseData; 
-            console.log(listOfBooks);
+//      try {
+            const responseData = await sendHttpRequest(
+                'GET', 
+                "https://www.googleapis.com/books/v1/volumes?q=" + search );
+
+            const listOfBooks = responseData; 
+                console.log(listOfBooks);
         
             for (i=0; i < listOfBooks.items.length; i++) {
                  console.log(listOfBooks.items[i]);
@@ -300,7 +301,17 @@ const listElement = document.querySelector('.list-books'); //<!--results-->
                 //BookMark Icon event
                 const target = postEl.querySelector('.icon-bookmark');    
                 target.addEventListener('click', () => {
-                    console.log("bookmark", listOfBooks.items[i].volumeInfo.title)
+                    
+                   
+                    sessionStorage.setItem('bookStorage', bookStorage);
+                    sessionStorage.setItem('bookStorage' , JSON.stringify(bookStorage));
+                        
+                    
+                    const extractedBook = sessionStorage.getItem('bookStorage');
+                    //console.log(extractedBook);
+                    
+                    const extractedBookInfo = JSON.parse(sessionStorage.getItem('bookStorage'));
+                    console.log(extractedBookInfo);
                 }); 
 
                 postEl.querySelector('.id').textContent = 'id: '+ listOfBooks.items[i].id;
@@ -309,28 +320,42 @@ const listElement = document.querySelector('.list-books'); //<!--results-->
                 postEl.querySelector('.desc').textContent ='Description: '+ listOfBooks.items[i].volumeInfo.description;
                 postEl.querySelector('img').src = listOfBooks.items[i].volumeInfo.imageLinks.thumbnail;
 
-                    if (postEl.querySelector('.desc').textContent.length > 200) {
-                        postEl.querySelector('.desc').textContent = postEl.querySelector('.desc').textContent.substring(0,200);
-                        }
+                if (postEl.querySelector('.desc').textContent.length > 200) {
+                    postEl.querySelector('.desc').textContent = postEl.querySelector('.desc').textContent.substring(0,200);
+                }
 
-                    if (!postEl.querySelector('img').src) {
-                        postEl.querySelector('img').src ="resources/css/img/unavailable.png";
-                    }
+                if (!postEl.querySelector('img').src) {
+                    postEl.querySelector('img').src ="resources/css/img/unavailable.png";
+                }
 
                 listElement.append(postEl); 
-            
-             
+                
+                const bookStorage = {
+                    id: listOfBooks.items[i].id,
+                    title: listOfBooks.items[i].volumeInfo.title,
+                    author: listOfBooks.items[i].volumeInfo.authors,
+                    desc: listOfBooks.items[i].volumeInfo.description,
+                    img: listOfBooks.items[i].volumeInfo.imageLinks.thumbnail
+                    }; 
+                
+                 for (let i = 0; i < bookStorage.length; i++) {
+                    const el = bookStorage[i];
+                    console.log('element:' +el);
+                    }
+                    
+                
+                
             }  
 //        } catch (error) {
 //          alert(error.message);
 //        }
       
-    }  
+    } 
 
 
 btnRechercher.addEventListener('click', fetchBooks, false);
 
 
-//******SESSION STORAGE*******/
 
+             
 
