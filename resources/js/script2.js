@@ -1,3 +1,5 @@
+let listArray = [];
+
 const myBooks = document.getElementById('myBooks');
 
 const backdrop = document.createElement('div');
@@ -140,26 +142,16 @@ templateImg.classList = "thumbnail";
 templateImg.src="resources/css/img/unavailable.png"; //resources/css/img/unavailable.png
 liElt.appendChild(templateImg);
 
-//****ICONS****//
 const anchorBookmark = document.createElement('a');
 anchorBookmark.classList="icon-bookmark";
 anchorBookmark.href="#";
 templateTitle.before(anchorBookmark);
+//template.appendChild(anchorBookmark);
 
 const iconBookmark = document.createElement('i');
 iconBookmark.classList ="fas fa-bookmark";
 iconBookmark.ariaHidden="true";
 anchorBookmark.appendChild(iconBookmark);
-
-//const anchorTrash = document.createElement('a');
-//anchorTrash.classList = "icon-trash";
-//anchorTrash.href = "#";
-//pochList.appendChild(anchorTrash)
-
-//const iconTrash = document.createElement('i');
-//iconTrash.classList = "fas fa-trash-alt";
-//iconTrash.ariaHidden = "true";
-//anchorTrash.append(iconTrash);
 
 
 //****LIST OUTPUT****//
@@ -187,6 +179,9 @@ const pochList = document.createElement('ul');
 pochList.classList = "list-pochList";
 contentDivPochList.appendChild(pochList);
 
+if (!sessionStorage.getItem('bookStorage')) {
+    sessionStorage.setItem('bookStorage',JSON.stringify(new Array()))
+    }
 
    ////********- SCRIPT -********////
 const toggleBackdropHandler = () => {
@@ -291,7 +286,6 @@ const listElement = document.querySelector('.list-books'); //<!--results-->
 
             const listOfBooks = responseData; 
                 console.log(listOfBooks);
-        
             for (i=0; i < listOfBooks.items.length; i++) {
                  console.log(listOfBooks.items[i]);
 
@@ -299,20 +293,29 @@ const listElement = document.querySelector('.list-books'); //<!--results-->
                 console.log("postEl", postEl);
 
                 //BookMark Icon event
+                let booksArray = [];
+                
                 const target = postEl.querySelector('.icon-bookmark');    
                 target.addEventListener('click', () => {
                     
-                   
-                    sessionStorage.setItem('bookStorage', bookStorage);
-                    sessionStorage.setItem('bookStorage' , JSON.stringify(bookStorage));
-                        
+                    const booksArray = JSON.parse(sessionStorage.getItem('bookStorage'));
+                    console.log(booksArray);
                     
-                    const extractedBook = sessionStorage.getItem('bookStorage');
-                    //console.log(extractedBook);
+                    booksArray.push(bookStorage);
+                    sessionStorage.setItem('bookStorage', JSON.stringify(booksArray));
                     
-                    const extractedBookInfo = JSON.parse(sessionStorage.getItem('bookStorage'));
-                    console.log(extractedBookInfo);
-                }); 
+                    
+               }); 
+//                target.addEventListener('click', () => {
+//                    sessionStorage.setItem('bookStorage', bookStorage);
+//                    sessionStorage.setItem('bookStorage', JSON.stringify(bookStorage)); 
+//                    
+//                    const extractedBook = sessionStorage.getItem('bookStorage');
+//                    //console.log(extractedBook);
+//                    
+//                    const extractedBookInfo = JSON.parse(sessionStorage.getItem('bookStorage'));
+//                    console.log(extractedBookInfo);
+//                }); 
 
                 postEl.querySelector('.id').textContent = 'id: '+ listOfBooks.items[i].id;
                 postEl.querySelector('.titre').textContent = 'Titre: '+ listOfBooks.items[i].volumeInfo.title;
@@ -337,19 +340,14 @@ const listElement = document.querySelector('.list-books'); //<!--results-->
                     desc: listOfBooks.items[i].volumeInfo.description,
                     img: listOfBooks.items[i].volumeInfo.imageLinks.thumbnail
                     }; 
-                
-                 for (let i = 0; i < bookStorage.length; i++) {
-                    const el = bookStorage[i];
-                    console.log('element:' +el);
-                    }
-                    
-                
-                
+            
+                listArray.push(bookStorage);
+            
             }  
 //        } catch (error) {
 //          alert(error.message);
 //        }
-      
+       
     } 
 
 
