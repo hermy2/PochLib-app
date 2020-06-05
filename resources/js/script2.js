@@ -1,5 +1,5 @@
-let listArray = [];
-
+//let listArray = [];
+displaypochList();
 const myBooks = document.getElementById('myBooks');
 
 const backdrop = document.createElement('div');
@@ -232,43 +232,43 @@ const btnRechercher = document.getElementById('btn-rechercher');
 
 const listElement = document.querySelector('.list-books'); //<!--results-->
 
-    //Promisifying HttpRequest with XMLHttpRequest
-    function sendHttpRequest(method, url, data) {
-        const promise = new Promise((resolve, reject) => { 
-            const xhr = new XMLHttpRequest();
-        
-            //First step toward configuring the request using GET request as we want to get the request
-            xhr.open(method, url);
+//Promisifying HttpRequest with XMLHttpRequest
+function sendHttpRequest(method, url, data) {
+    const promise = new Promise((resolve, reject) => { 
+        const xhr = new XMLHttpRequest();
 
-            //parse JSON format response to output it in the UI; parse convert JSON data to js
-            xhr.responseType = 'json';
+        //First step toward configuring the request using GET request as we want to get the request
+        xhr.open(method, url);
 
-            xhr.onload = function() {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    resolve(xhr.response);
-                } else {
-                    reject(new Error('Something went wrong!'));
-                }
-            };
-            
-            xhr.onerror = function() {
-                reject(new Error('Failed to send request!'));
+        //parse JSON format response to output it in the UI; parse convert JSON data to js
+        xhr.responseType = 'json';
 
-            };
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject(new Error('Something went wrong!'));
+            }
+        };
 
-            xhr.send(JSON.stringify(data));
+        xhr.onerror = function() {
+            reject(new Error('Failed to send request!'));
 
-        });      
-        return promise; 
-    }
+        };
+
+        xhr.send(JSON.stringify(data));
+
+    });      
+    return promise; 
+}
     
-    async function fetchBooks() {
-        
-        const title = document.getElementById('titre-livre').value;
-        const author = document.getElementById('auteur').value;
-        const search = [title, author].join(' ');  //or let search =`${title} + ${author}`; 
-        
-        //check if both title / author are entered
+async function fetchBooks() {
+
+    const title = document.getElementById('titre-livre').value;
+    const author = document.getElementById('auteur').value;
+    const search = [title, author].join(' ');  //or let search =`${title} + ${author}`; 
+
+    //check if both title / author are entered
 //        if (title.trim() === '' ) {
 //            alert('please enter Title!');
 //            return;
@@ -276,84 +276,130 @@ const listElement = document.querySelector('.list-books'); //<!--results-->
 //            alert('please enter Author');
 //            return;
 //        }
-                        
-        sectionBookSearch.classList.toggle('visible');
-        
+
+    sectionBookSearch.classList.toggle('visible');
+
 //      try {
-            const responseData = await sendHttpRequest(
-                'GET', 
-                "https://www.googleapis.com/books/v1/volumes?q=" + search );
+        const responseData = await sendHttpRequest(
+            'GET', 
+            "https://www.googleapis.com/books/v1/volumes?q=" + search );
 
-            const listOfBooks = responseData; 
-                console.log(listOfBooks);
-            for (i=0; i < listOfBooks.items.length; i++) {
-                 console.log(listOfBooks.items[i]);
+        const listOfBooks = responseData; 
+            console.log('list of books: ' +listOfBooks);
+        for (i=0; i < listOfBooks.items.length -1; i++) {
+             displaySearchResult(listOfBooks.items[i], listElement, setEventAdd);
+        }
+}
 
-                const postEl = document.importNode(template.content, true);
-                console.log("postEl", postEl);
-
-                //BookMark Icon event
-                let booksArray = [];
-                
-                const target = postEl.querySelector('.icon-bookmark');    
-                target.addEventListener('click', () => {
-                    
-                    const booksArray = JSON.parse(sessionStorage.getItem('bookStorage'));
-                    console.log(booksArray);
-                    
-                    booksArray.push(bookStorage);
-                    sessionStorage.setItem('bookStorage', JSON.stringify(booksArray));
-                    
-                    
-               }); 
-//                target.addEventListener('click', () => {
-//                    sessionStorage.setItem('bookStorage', bookStorage);
-//                    sessionStorage.setItem('bookStorage', JSON.stringify(bookStorage)); 
-//                    
-//                    const extractedBook = sessionStorage.getItem('bookStorage');
-//                    //console.log(extractedBook);
-//                    
-//                    const extractedBookInfo = JSON.parse(sessionStorage.getItem('bookStorage'));
-//                    console.log(extractedBookInfo);
-//                }); 
-
-                postEl.querySelector('.id').textContent = 'id: '+ listOfBooks.items[i].id;
-                postEl.querySelector('.titre').textContent = 'Titre: '+ listOfBooks.items[i].volumeInfo.title;
-                postEl.querySelector('.author').textContent = 'Auteur: '+ listOfBooks.items[i].volumeInfo.authors;
-                postEl.querySelector('.desc').textContent ='Description: '+ listOfBooks.items[i].volumeInfo.description;
-                postEl.querySelector('img').src = listOfBooks.items[i].volumeInfo.imageLinks.thumbnail;
-
-                if (postEl.querySelector('.desc').textContent.length > 200) {
-                    postEl.querySelector('.desc').textContent = postEl.querySelector('.desc').textContent.substring(0,200);
+    
+function setEventAdd(target) {
+    target.addEventListener('click', () => { 
+        const bookEl = target.parentNode;
+        const bookStorage = {
+            id: bookEl.querySelector('.id').textContent.substring(4),
+            volumeInfo: {
+                title: bookEl.querySelector('.titre').textContent.substring(7),
+                author: bookEl.querySelector('.author').textContent.substring(8),
+                description: bookEl.querySelector('.desc').textContent.substring(12),
+                imageLinks: {
+                    thumbnail: bookEl.querySelector('img').src,
                 }
+            }
+        };
 
-                if (!postEl.querySelector('img').src) {
-                    postEl.querySelector('img').src ="resources/css/img/unavailable.png";
+        let arrayBook = JSON.parse(sessionStorage.getItem('arrayBook'));
+        console.log(arrayBook);
+        if(arrayBook == null || arrayBook == '') {
+            arrayBook = [];
+        }
+
+        arrayBook.push(bookStorage);
+        sessionStorage.setItem('arrayBook', JSON.stringify(arrayBook));
+        
+        displaypochList()
+
+    });
+}
+
+
+function setEventRemove(target) {
+    target.addEventListener('click', () => { 
+        const bookEl = target.parentNode;
+        const bookStorage = {
+            id: bookElm.querySelector('.id').textContent.substring(4),
+            volumeInfo: {
+                title: bookEl.querySelector('.titre').textContent.substring(7),
+                author: bookEl.querySelector('.author').textContent.substring(8),
+                description: bookEl.querySelector('.desc').textContent.substring(12),
+                imageLinks: {
+                    thumbnail: bookEl.querySelector('img').src,
                 }
+            }
+        };
+        let arrayBook = JSON.parse(sessionStorage.getItem('arrayBook'));
+        if(arrayBook == null || arrayBook == '') {
+            array = [];
 
-                listElement.append(postEl); 
-                
-                const bookStorage = {
-                    id: listOfBooks.items[i].id,
-                    title: listOfBooks.items[i].volumeInfo.title,
-                    author: listOfBooks.items[i].volumeInfo.authors,
-                    desc: listOfBooks.items[i].volumeInfo.description,
-                    img: listOfBooks.items[i].volumeInfo.imageLinks.thumbnail
-                    }; 
-            
-                listArray.push(bookStorage);
-            
-            }  
+       } else {
+           const found = arrayBook.find(book => book.id == bookStorage.id);
+           console.log(found);
+           let index = arrayBook.indexOf(found);
+           if (index > -1) {
+               arrayBook.splice(index, 1);
+           }
+       }
+       sessionStorage.setItem('arrayBook', JSON.stringify(arrayBook));
+
+    });
+}
+
+
+function displaySearchResult(book, elem, setEvent) {
+
+    const postEl = document.importNode(template.content, true);
+    console.log("postEl", postEl);
+
+    const target = postEl.querySelector('.icon-bookmark');    
+    setEvent(target);
+
+    postEl.querySelector('.id').textContent = 'id: '+ book.id;
+    postEl.querySelector('.titre').textContent = 'Titre: '+ book.volumeInfo.title;
+    postEl.querySelector('.author').textContent = 'Auteur: '+ book.volumeInfo.authors;
+    postEl.querySelector('.desc').textContent ='Description: '+ book.volumeInfo.description;
+    postEl.querySelector('img').src = book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail ? book.volumeInfo.imageLinks.thumbnail : 'resources/css/img/unavailable.png';
+
+    if (postEl.querySelector('.desc').textContent.length > 200) {
+        postEl.querySelector('.desc').textContent = postEl.querySelector('.desc').textContent.substring(0,200);
+    }
+    
+    elem.append(postEl); 
+
+}  
 //        } catch (error) {
 //          alert(error.message);
 //        }
-       
-    } 
+
+function displaypochList() {
+    const listOfBooks = JSON.parse(sessionStorage.getItem('arrayBook'));
+    console.log('display:' +listOfBooks);
+    
+    //VIDER NOTRE ELEMENT UL.list-pochList
+    //let ulPochList = Document.getElementsByClassName()
+    if (listOfBooks == null || !listOfBooks) {
+        return;
+    }
+
+    for(let book of listOfBooks){
+        console.log("book",book)    
+        //displaypochListBook(book, ul);
+    }
+
+}
+
+function displaypochListBook(book,ul) {
+    //ul.append(li)
+    //APPEND D'UN LI DANS TON UL
+}
 
 
 btnRechercher.addEventListener('click', fetchBooks, false);
-
-
-
-             
-
