@@ -142,18 +142,6 @@ templateImg.classList = "thumbnail";
 templateImg.src="resources/css/img/unavailable.png"; //resources/css/img/unavailable.png
 liElt.appendChild(templateImg);
 
-const anchorBookmark = document.createElement('a');
-anchorBookmark.classList="icon-bookmark";
-anchorBookmark.href="#";
-templateTitle.before(anchorBookmark);
-//template.appendChild(anchorBookmark);
-
-const iconBookmark = document.createElement('i');
-iconBookmark.classList ="fas fa-bookmark";
-iconBookmark.ariaHidden="true";
-anchorBookmark.appendChild(iconBookmark);
-
-
 //****LIST OUTPUT****//
 const listOutput = document.createElement('div');
 listOutput.classList = "list-output";
@@ -178,6 +166,32 @@ row2.appendChild(contentDivPochList);
 const pochList = document.createElement('ul');
 pochList.classList = "list-pochList";
 contentDivPochList.appendChild(pochList);
+
+//****ICONS****//
+const anchorBookmark = document.createElement('a');
+anchorBookmark.classList="icon-bookmark";
+anchorBookmark.href="#";
+templateTitle.before(anchorBookmark);
+//template.appendChild(anchorBookmark);
+
+const iconBookmark = document.createElement('i');
+iconBookmark.classList ="fas fa-bookmark";
+iconBookmark.ariaHidden="true";
+anchorBookmark.appendChild(iconBookmark);
+
+const anchorTrash = document.createElement('a');
+anchorTrash.classList = "icon-trash";
+anchorTrash.href = "#";
+pochList.appendChild(anchorTrash)
+
+const iconTrash = document.createElement('i');
+iconTrash.classList = "fas fa-trash-alt";
+iconTrash.ariaHidden = "true";
+anchorTrash.append(iconTrash);
+
+if (!sessionStorage.getItem('bookStorage')) {
+    sessionStorage.setItem('bookStorage',JSON.stringify(new Array()))
+    }
 
 if (!sessionStorage.getItem('bookStorage')) {
     sessionStorage.setItem('bookStorage',JSON.stringify(new Array()))
