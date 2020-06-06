@@ -142,6 +142,7 @@ templateImg.classList = "thumbnail";
 templateImg.src="resources/css/img/unavailable.png"; //resources/css/img/unavailable.png
 liElt.appendChild(templateImg);
 
+
 //****LIST OUTPUT****//
 const listOutput = document.createElement('div');
 listOutput.classList = "list-output";
@@ -167,6 +168,10 @@ const pochList = document.createElement('ul');
 pochList.classList = "list-pochList";
 contentDivPochList.appendChild(pochList);
 
+const liElmPochList = document.createElement('li');
+liElmPochList.classList = "li-pochList";
+pochList.append(liElmPochList);
+
 //****ICONS****//
 const anchorBookmark = document.createElement('a');
 anchorBookmark.classList="icon-bookmark";
@@ -188,10 +193,6 @@ const iconTrash = document.createElement('i');
 iconTrash.classList = "fas fa-trash-alt";
 iconTrash.ariaHidden = "true";
 anchorTrash.append(iconTrash);
-
-if (!sessionStorage.getItem('bookStorage')) {
-    sessionStorage.setItem('bookStorage',JSON.stringify(new Array()))
-    }
 
 if (!sessionStorage.getItem('bookStorage')) {
     sessionStorage.setItem('bookStorage',JSON.stringify(new Array()))
@@ -394,7 +395,7 @@ function displaySearchResult(book, elem, setEvent) {
 //        }
 
 
-//UNABLE TO RENDER BOOK IN MY FAVOURITE BOOK SECTION (MA POCH'LIST)
+//UNABLE TO RENDER BOOKS IN MY FAVOURITE SECTION(MA POCH'LIST)
 function displaypochList() {
     const listOfBooks = JSON.parse(sessionStorage.getItem('bookStorage'));
     console.log('display:' +listOfBooks);
@@ -409,3 +410,33 @@ function displaypochList() {
 
 
 btnRechercher.addEventListener('click', fetchBooks, false);
+
+
+
+
+
+
+
+
+
+
+//function displaypochList() {
+//    const listOfBooks = JSON.parse(sessionStorage.getItem('arrayBook'));
+//    console.log('display:' +listOfBooks);
+//    
+//    let ulPochList = document.querySelector('.pochList');
+//    if (listOfBooks == null || !listOfBooks) {
+//        return;
+//    }    
+//    
+//    for(let book of listOfBooks){
+//        console.log("book",book)    
+//        displaypochListBook(book, ulPochList, setEventRemove);
+//    }
+//
+//}
+//
+//function displaypochListBook(book,ul, setEvent) {
+//    //ul.append(li)
+//    //APPEND D'UN LI DANS TON UL
+//}
