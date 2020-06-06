@@ -9,12 +9,12 @@ btnAddBooks.classList = "btn btn-full";
 btnAddBooks.textContent = "Ajouter un livre";
 myBooks.appendChild(btnAddBooks);
 
-//****MODAL CONTENT****/
+
+//****MODAL CONTENT****//
 const addBookModal = document.createElement('div');
 addBookModal.classList = "modal";
 addBookModal.id = "add-modal";
 backdrop.after(addBookModal);
-
 
 let newBook = document.querySelector('.h2');
 addBookModal.appendChild(newBook);
@@ -26,6 +26,7 @@ addBookModal.appendChild(research);
 
 const hrTag = document.querySelector('hr');
 hrTag.remove();
+
 
 //****USER INPUT****//
 const titreLivre = document.createElement('label');
@@ -50,6 +51,7 @@ authorInput.name = "auteur";
 authorInput.id = "auteur";
 research.appendChild(authorInput);
 
+
 //****MODAL ACTIONS****//
 const modalActions = document.createElement('div');
 modalActions.classList = "modal-actions";
@@ -65,6 +67,7 @@ const cancelBtnModal = document.createElement('button');
 cancelBtnModal.classList = "btn btn-passive";
 cancelBtnModal.textContent = "Annuler";
 modalActions.appendChild(cancelBtnModal);
+
 
 //****SECTION SEARCHBOOK RESULTS****//
 const sectionBookSearch = document.createElement('section');
@@ -87,6 +90,7 @@ const bookList = document.createElement('div');
 bookList.classList = "book-list";
 row3.appendChild(bookList);
 
+
 //****HEADER****//
 const header = document.createElement('header');
 sectionBookSearch.before(header);
@@ -102,6 +106,7 @@ const logo = document.querySelector('.logo');
 rowLogo.appendChild(logo);
 
 header.appendChild(myBooks);
+
 
 //****TEMPLATE*****//
 const template = document.createElement('template');
@@ -170,12 +175,12 @@ const liElmPochList = document.createElement('li');
 liElmPochList.classList = "li-pochList";
 pochList.append(liElmPochList);
 
+
 //****ICONS****//
 const anchorBookmark = document.createElement('a');
 anchorBookmark.classList="icon-bookmark";
 anchorBookmark.href="#";
 templateTitle.before(anchorBookmark);
-//template.appendChild(anchorBookmark);
 
 const iconBookmark = document.createElement('i');
 iconBookmark.classList ="fas fa-bookmark";
@@ -187,7 +192,6 @@ anchorTrash.classList = "icon-trash";
 anchorTrash.href = "#";
 templateTitle.before(anchorTrash);
 
-
 const iconTrash = document.createElement('i');
 iconTrash.classList = "fas fa-trash-alt";
 iconTrash.ariaHidden = "true";
@@ -198,7 +202,11 @@ if (!sessionStorage.getItem('bookStorage')) {
     sessionStorage.setItem('bookStorage',JSON.stringify(new Array()))
     }
 
+
    ////********- SCRIPT -********////
+
+const userInputs = research.querySelectorAll('input');
+
 const toggleBackdropHandler = () => {
     backdrop.classList.toggle('visible');
 };
@@ -211,20 +219,21 @@ const showBookModal = () => {
  
 const backdropClickHandler = () => {
     showBookModal();
+    clearBookInput();
 };
  
 const cancelBtnHandler = () => {
     showBookModal();
-//    clearBookInput();
+    clearBookInput();
 };
 
 //Clear userInput
 const clearBookInput = () => {
-  usrInputs[0].value = '';
-//  for (const usrInput of userInputs) {
-//     usrInput.value = '';
-//   }
+  for (const usrInput of userInputs) {
+     usrInput.value = '';
+   }
 };
+
 
 function onclickSearch  () { 
     showBookModal();
@@ -248,8 +257,8 @@ const btnRechercher = document.getElementById('btn-rechercher');
 const listElement = document.querySelector('.list-books'); //<!--results-->
 const ulPochList = document.querySelector('.list-pochList');
 
-
 displaypochList();
+
 //Promisifying HttpRequest with XMLHttpRequest
 function sendHttpRequest(method, url, data) {
     const promise = new Promise((resolve, reject) => { 
@@ -286,18 +295,18 @@ async function fetchBooks() {
     const author = document.getElementById('auteur').value;
     const search = [title, author].join(' ');  //or let search =`${title} + ${author}`; 
 
-    //check if both title / author are entered
-//        if (title.trim() === '' ) {
-//            alert('please enter Title!');
-//            return;
-//        } else if (author.trim() === '') {
-//            alert('please enter Author');
-//            return;
-//        }
+    //check if both title & author are entered
+        if (title.trim() === '' ) {
+            alert('please enter Title!');
+            return;
+        } else if (author.trim() === '') {
+            alert('please enter Author');
+            return;
+        }
 
     sectionBookSearch.classList.toggle('visible');
 
-//      try {
+      try {
         const responseData = await sendHttpRequest(
             'GET', 
             "https://www.googleapis.com/books/v1/volumes?q=" + search );
@@ -307,6 +316,11 @@ async function fetchBooks() {
         for (i=0; i < listOfBooks.items.length -1; i++) {
              displaySearchResult(listOfBooks.items[i], listElement, setEventAdd, '.icon-bookmark');
         }
+    
+    } catch (error) {
+      alert(error.message);
+    }
+    clearBookInput();
 }
 
     
@@ -406,12 +420,9 @@ function displaySearchResult(book, elem, setEvent, icon) {
     elem.append(postEl); 
 
 }  
-//        } catch (error) {
-//          alert(error.message);
-//        }
 
 
-//UNABLE TO RENDER BOOKS IN MY FAVOURITE SECTION(MA POCH'LIST)
+//Render books in MA POCH'LIST
 function displaypochList() {
     ulPochList.innerHTML = '';
     const listOfBooks = JSON.parse(sessionStorage.getItem('arrayBook'));
@@ -421,7 +432,6 @@ function displaypochList() {
     }
     for (let book of listOfBooks) {
         displaySearchResult(book, ulPochList, setEventRemove, '.icon-trash');
-        console.log('list test: '+displaySearchResult);
     }
 }
 
