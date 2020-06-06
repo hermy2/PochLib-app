@@ -379,26 +379,17 @@ function displaySearchResult(book, elem, setEvent) {
 //          alert(error.message);
 //        }
 
+
 function displaypochList() {
-    const listOfBooks = JSON.parse(sessionStorage.getItem('arrayBook'));
+    const listOfBooks = JSON.parse(sessionStorage.getItem('bookStorage'));
     console.log('display:' +listOfBooks);
-    
-    //VIDER NOTRE ELEMENT UL.list-pochList
-    //let ulPochList = Document.getElementsByClassName()
     if (listOfBooks == null || !listOfBooks) {
         return;
     }
-
-    for(let book of listOfBooks){
-        console.log("book",book)    
-        //displaypochListBook(book, ul);
+    for (let book of listOfBooks) {
+        displaySearchResult(book, liElmPochList, setEventRemove);
+        console.log('list test: '+displaySearchResult);
     }
-
-}
-
-function displaypochListBook(book,ul) {
-    //ul.append(li)
-    //APPEND D'UN LI DANS TON UL
 }
 
 
