@@ -380,6 +380,7 @@ function displaySearchResult(book, elem, setEvent) {
 //        }
 
 
+//UNABLE TO RENDER BOOK IN MY FAVOURITE BOOK SECTION (MA POCH'LIST)
 function displaypochList() {
     const listOfBooks = JSON.parse(sessionStorage.getItem('bookStorage'));
     console.log('display:' +listOfBooks);
