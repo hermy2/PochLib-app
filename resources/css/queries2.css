@@ -1,17 +1,55 @@
 /* Big tablets to 1200px (width smaller than the 1140px row) */
 @media only screen and (max-width: 1200px) {
-    .row {
-        padding: 0 2%;
-    }
+
+        .modal {
+          position: fixed;
+          z-index: 100;
+          width: 450px;
+          height: 40%;
+          top: 25vh;
+          left: 32%;
+        }
+    
+        label { font-size: 90%; }
+    
+        input { margin-bottom: 0; }
+    
+        .bookList-list  { margin: 0.5rem 250px; }
+    
+        .thumbnail { width: 110px; }
+    
+        .modal h2 { font-size: 140%; }
+    
+        .modal-actions { font-size: 90%; }
+    
+/*        .row { padding: 0 2%; }*/
+    
 }
-
-
 
 
 /* Small tablets to big tablets: from 768px to 1023px*/
 @media only screen and (max-width: 1023px) {
     body { font-size: 18px; }
+    input { margin-bottom: 10px; }
+    
     section { padding: 60px 0; }
+    
+    .modal {
+          position: absolute;
+          z-index: 100;
+          width: 450px;
+          height: 40%;
+          top: 18vh;
+          left: 22%;
+        }
+    
+    .logo { height: 90px; }
+    
+    .bookList-list  { margin: 0.5rem 200px; }
+    
+/*    .row { padding: 0 4%; }*/
+
+    
 }
 
 
@@ -19,6 +57,34 @@
 
 /* Small phones to small tablets: from 481px t0 767px */
 @media only screen and (max-width: 767px) {
+    
+    body { font-size: 14px; }
+    
+    .modal {
+          position: fixed;
+          z-index: 100;
+          width: 300px;
+          height: 30%;
+          top: 15vh;
+          left: 22%;
+        }
+    
+    .logo { height: 70px; }
+    
+    .modal-actions { display:flow-root; }
+    
+    .btn-passive { margin-left: 10px; }
+    
+    .bookList-list  { margin: 0.5rem 120px; }
+    
+    .thumbnail { width: 90px; }
+    
+/*    .row { padding: 0 4%; }*/
+    
+    
+    
+    
+    
     
 }
 
